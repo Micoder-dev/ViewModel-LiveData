@@ -1,6 +1,8 @@
 package com.example.viewmodel;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
@@ -25,12 +27,19 @@ public class MainActivity extends AppCompatActivity {
         mTextView = findViewById(R.id.textView);
         mButton = findViewById(R.id.clickBtn);
 
-        mTextView.setText("You clicked "+ mMainActivityViewModel.getInitialCount() +" times");
+        // Using Live Data to get the counter
+        LiveData<Integer> count = mMainActivityViewModel.getInitialCount();
+        count.observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                mTextView.setText("You clicked me: "+ integer + " times");
+            }
+        });
 
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mTextView.setText("You clicked "+ mMainActivityViewModel.getCounter() +" times");
+                mMainActivityViewModel.getCounter();
             }
         });
 
